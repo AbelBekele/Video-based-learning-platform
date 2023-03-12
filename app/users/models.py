@@ -1,10 +1,9 @@
 import uuid
-
 from app.config import get_settings
-from cassandra.cassandra import columns
+from cassandra.cqlengine import columns
 from cassandra.cqlengine.models import Model
 
-setting = get_settings()
+settings = get_settings()
 
 class User(Model):
     __keyspace__ = settings.keyspace
