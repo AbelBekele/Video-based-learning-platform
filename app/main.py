@@ -19,3 +19,7 @@ def on_startup():
 @app.get("/")
 def homepage() :
     return {"hello": "world", "keyspace": settings.keyspace} # json data -> REST API
+@app.get("/users")
+def users_list():
+    queryset =  User.objects.all().limit(5)
+    return list(queryset)
