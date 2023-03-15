@@ -5,6 +5,7 @@ from cassandra.cqlengine.management import sync_table
 from . import config, database
 from .users.models import User
 
+
 app = FastAPI()
 DB_SESSION = None
 settings = config.get_settings()
