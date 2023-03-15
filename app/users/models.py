@@ -22,8 +22,12 @@ class User(Model):
     @staticmethod
     def create_user(email, password=None):
         queryset = User.objects.filter(email=email)
-        if q.count() != 0:
-            raise Exception("user is already registered")
+        if queryset.count() != 0:
+            raise Exception("User is already registered")
+            
+            validator.validate_email_(email)
+            if not valid:
+                raise Exception ("Invalid email address: {msg}")
             obj = User(email=email)
             obj.password = password
             obj.save()
