@@ -28,7 +28,7 @@ def on_startup():
 def homepage(request: Request):
     context = {
         "request": request,
-        "title" : "Video based-learning platform"
+        "title" : "Video based learning platform"
     }
     return templates.TemplateResponse("home.html", context)
 @app.get("/users")
