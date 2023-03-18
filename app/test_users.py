@@ -1,6 +1,9 @@
 import pytest
+import warnings
 from app.users.models import User
 from app import database
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 @pytest.fixture(scope='module')
 def setup():
