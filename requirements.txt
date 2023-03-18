@@ -1,3 +1,5 @@
+pathlib
+jinja2
 pytest
 argon2-cffi
 email-validator
