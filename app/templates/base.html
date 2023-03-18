@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Video based learning platform</title>
+        <title>{% block title%} Video based learning platform {% endblock %}</title>
     </head>
     <body>
+        {% include 'snippets/nav.html' %}
         {% block content %}
         <h1>Body</h1>
         {% endblock %}
