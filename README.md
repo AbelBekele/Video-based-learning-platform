@@ -1,7 +1,7 @@
 Video-Based Learning Platform
 =============================
 
-This is a video-based learning platform built using FastAPI, Python, NoSQL, and Bootstrap. The platform allows users to upload and watch educational videos, take quizzes, and track their progress.
+This is a video-based learning platform built using FastAPI, Python, NoSQL, and Bootstrap. The platform allows users to register on the platform, watch educational videos and track their progress.
 
 Features
 --------
