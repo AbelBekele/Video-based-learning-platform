@@ -1,6 +1,7 @@
-fastapi
-uvicorn
-cassandra-driver
-python-dotenv
-email-validator
+pytest
 argon2-cffi
+email-validator
+python-dotenv
+cassandra-driver
+uvicorn
+fastapi
