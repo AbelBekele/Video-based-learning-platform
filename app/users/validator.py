@@ -2,12 +2,12 @@ from email_validator import EmailNotValidError, validate_email
 
 def validate_email_(email):
     msg = ""
-    validity = False
+    valid = False
     try:
-        validity = validate_email(email)
-        # update the email var with a normaliezed valvue 
-        email = vlaid.email
-        validity = True
-    except EmailNotValidError as m:
-        msg = str(m)
+        valid = validate_email(email)
+        # update the email var with a normalized value
+        email = valid.email
+        valid = True
+    except EmailNotValidError as e:
+        msg = str(e)
     return valid, msg, email

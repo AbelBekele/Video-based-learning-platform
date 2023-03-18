@@ -4,7 +4,7 @@ from cassandra.cqlengine import columns
 from cassandra.cqlengine.models import Model
 
 from . import validator
-from . import security
+from . import securities
 
 settings = get_settings()
 
@@ -20,16 +20,16 @@ class User(Model):
     def __repr__(self):
         return f"User(email={self.email}, user_id={self.user_id})"
 
-    def set_password(self, pw, commit=False):
-        pw_hash = security.generate_hash(pw)
-        self.password - pw_hash
+    def set_password(self, passw, commit=False):
+        passw_hash = securities.generate_hash(passw)
+        self.password = passw_hash
         if commit:
             self.save()
         return True
 
-    def verify_password(self, pw):
-        pw_hash = self.password
-        verified, _ = security.verify_hash(pw_hash, pw)
+    def verify_password(self, passw):
+        passw_hash = self.password
+        verified, _ = securities.verify_hash(passw_hash, passw)
         return verified
     
     @staticmethod
@@ -38,10 +38,11 @@ class User(Model):
         if queryset.count() != 0:
             raise Exception("User is already registered")
             
-            validator.validate_email_(email)
-            if not valid:
-                raise Exception ("Invalid email address: {msg}")
-            obj = User(email=email)
-            obj.set_password(password)
-            obj.save()
-            return obj
+        valid, msg, email = validator.validate_email_(email)
+        if not valid:
+            raise Exception(f"Invalid email address: {msg}")
+        
+        obj = User(email=email)
+        obj.set_password(password)
+        obj.save()
+        return obj
