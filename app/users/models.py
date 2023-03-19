@@ -8,6 +8,9 @@ from . import securities
 
 settings = get_settings()
 
+# Uses a keyspace to communicate with database
+# Accepts email address and password from user
+# Generates user id using UUID for newly inserted user
 class User(Model):
     __keyspace__ = settings.keyspace
     email = columns.Text(primary_key=True)
@@ -19,7 +22,7 @@ class User(Model):
 
     def __repr__(self):
         return f"User(email={self.email}, user_id={self.user_id})"
-
+    # 
     def set_password(self, passw, commit=False):
         passw_hash = securities.generate_hash(passw)
         self.password = passw_hash
