@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Sign up</h1>
+
+{% if errors %}
+<div style='margin-bottom:15px;'>
+    <p style='margin-bottom:2px;'>An error occurred please check the following:</p>
+        {% for error in errors %} 
+            <li><b>{{ error.loc[0] }}</b>: {{ error.msg }}</li>
+        {% endfor %}
+    
+    </div>
+{% endif %}
+
+<form method = 'POST'>
+    <div>
+        <label for = 'email'>Email</label>
+        <input type='email' name='email' placeholder='Enter your email address'/>
+    </div>
+
+    <div>
+        <label for = 'password'>Password</label>
+        <input type='password' name='password' placeholder='Enter your password'/>
+    </div>
+
+    <div>
+        <label for = 'password'>Confirm password</label>
+        <input type='password' name='password_confirm' placeholder='Confirm your password'/>
+    </div>
+
+    <div>
+        <button type="submit">Sign up</button>
+    </div>
+
+</form>
+{% endblock %}
