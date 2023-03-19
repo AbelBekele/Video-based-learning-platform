@@ -31,6 +31,15 @@ def homepage(request: Request):
         "title" : "Video based learning platform"
     }
     return templates.TemplateResponse("home.html", context)
+
+@app.get("/login", response_class=HTMLResponse)
+def login_get_view(request: Request):
+    return templates.TemplateResponse("authentication/login.html", {
+        "request": request,
+    })
+
+
+
 @app.get("/users")
 def users_list():
     queryset =  User.objects.all().limit(5)
