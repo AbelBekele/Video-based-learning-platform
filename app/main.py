@@ -8,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
 from . import config, database, utility
+from .shortcuts import render
 from .users.models import User
 from .users.pydantic_schemas import UserSignupSchema
 from .users.pydantic_schemas import UserLoginSchema
@@ -31,15 +32,13 @@ def on_startup():
 @app.get("/", response_class=HTMLResponse)
 def homepage(request: Request):
     context = {
-        "request": request,
         "title" : "Video based learning platform"
     }
-    return templates.TemplateResponse("home.html", context)
+    return render(request, "home.html", context)
 
 @app.get("/login", response_class=HTMLResponse)
 def login_get_view(request: Request):
-    return templates.TemplateResponse("authentication/login.html", {
-        "request": request,
+    return render(request, "authentication/login.html", {
     })
 
 @app.post("/login", response_class=HTMLResponse)
@@ -52,16 +51,14 @@ def login_post_view(request: Request,
     }
     data, errors = utility.data_or_error_validation_schema(raw_data, UserLoginSchema)
     print(data['password'].get_secret_value())
-    return templates.TemplateResponse("authentication/login.html", {
-        "request": request,
+    return render(request, "authentication/login.html", {
         "data": data,
         "errors": errors,
     })
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_get_view(request: Request):
-    return templates.TemplateResponse("authentication/signup.html", {
-        "request": request,
+    return render(request, "authentication/signup.html", {
     })
 
 @app.post("/signup", response_class=HTMLResponse)
@@ -76,8 +73,7 @@ def signup_post_view(request: Request,
         "password_confirm": password_confirm
     }
     data, errors = utility.data_or_error_validation_schema(raw_data, UserSignupSchema)
-    return templates.TemplateResponse("authentication/signup.html", {
-        "request": request,
+    return render(request, "authentication/signup.html", {
         "data": data,
         "errors": errors,
     })
