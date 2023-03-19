@@ -21,3 +21,7 @@ class UserSignupSchema(BaseModel):
         if password != password_confirm:
             raise ValueError("Password do not match")
         return v
+
+class UserLoginSchema(BaseModel):
+    email: EmailStr
+    password: SecretStr

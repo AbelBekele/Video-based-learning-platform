@@ -7,9 +7,10 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
-from . import config, database
+from . import config, database, utility
 from .users.models import User
 from .users.pydantic_schemas import UserSignupSchema
+from .users.pydantic_schemas import UserLoginSchema
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 TEMPLATE_DIR = BASE_DIR / "templates"
@@ -45,9 +46,16 @@ def login_get_view(request: Request):
 def login_post_view(request: Request, 
     email: str=Form(...), 
     password: str=Form(...)):
-    print (email, password)
+    raw_data = {
+        "email": email,
+        "password": password,
+    }
+    data, errors = utility.data_or_error_validation_schema(raw_data, UserLoginSchema)
+    print(data['password'].get_secret_value())
     return templates.TemplateResponse("authentication/login.html", {
         "request": request,
+        "data": data,
+        "errors": errors,
     })
 
 @app.get("/signup", response_class=HTMLResponse)
@@ -62,23 +70,12 @@ def signup_post_view(request: Request,
     password: str=Form(...),
     password_confirm: str=Form(...)
     ):
-    data = {}
-    errors = []
-    error_str = ""
-    try:
-        cleaned_data = UserSignupSchema(email=email, password=password,
-        password_confirm=password_confirm)
-        data = cleaned_data.dict()
-    except ValidationError as e:
-        error_str = e.json()
-    try:
-        errors = json.loads(error_str)
-    except Exception as e:
-        errors = [{"loc": "non_field_error", "msg": "Unknown error"}]
-
-    # cleaned_data = UserSignupSchema(email=email, password=password, 
-    # password_confirm=password_confirm)
-    # print(cleaned_data.dict())
+    raw_data = {
+        "email": email,
+        "password": password,
+        "password_confirm": password_confirm
+    }
+    data, errors = utility.data_or_error_validation_schema(raw_data, UserSignupSchema)
     return templates.TemplateResponse("authentication/signup.html", {
         "request": request,
         "data": data,
