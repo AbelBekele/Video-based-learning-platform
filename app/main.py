@@ -5,6 +5,8 @@ from fastapi import Request
 from fastapi import Form, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.authentication import AuthenticationMiddleware
+from starlette.authentication import requires
 from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
 from . import config, database, utility
@@ -13,13 +15,14 @@ from .users.models import User
 from .users.decorators import login_required
 from .users.pydantic_schemas import UserSignupSchema
 from .users.pydantic_schemas import UserLoginSchema
-
+from .users.backends import JWTCookieBackend
 
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 TEMPLATE_DIR = BASE_DIR / "templates"
 
 app = FastAPI()
+app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
 templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
 
 DB_SESSION = None
@@ -36,10 +39,9 @@ def on_startup():
 
 @app.get("/", response_class=HTMLResponse)
 def homepage(request: Request):
-    context = {
-        "title" : "Video based learning platform"
-    }
-    return render(request, "home.html", context)
+    if request.user.is_authenticated:
+        return render(request, "dashboard.html", {}, status_code=200)
+    return render(request, "home.html", {})
 
 @app.get("/account", response_class=HTMLResponse)
 @login_required

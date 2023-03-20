@@ -26,7 +26,7 @@ def redirect(path, cookies:dict={}, remove_session=False):
     response = RedirectResponse(path, status_code=302)
     for k, v in cookies.items():
         response.set_cookie(key=k, value=v, httponly=True)
-    if remove_session:
+    if remove_session is True:
         response.set_cookie(key="session_ended", value="1", httponly=True)
         response.delete_cookie("session_id")
     return response
