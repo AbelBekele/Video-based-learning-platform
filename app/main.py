@@ -38,14 +38,14 @@ def homepage(request: Request):
 
 @app.get("/login", response_class=HTMLResponse)
 def login_get_view(request: Request):
-    return render(request, "authentication/login.html", {
-    })
+    session_id = request.cookies.get("session_id") or None
+    return render(request, "authentication/login.html", 
+    {"logged_in": session_id is not None})
 
 @app.post("/login", response_class=HTMLResponse)
 def login_post_view(request: Request, 
     email: str=Form(...), 
     password: str=Form(...)):
-
     raw_data = {
         "email": email,
         "password": password,
