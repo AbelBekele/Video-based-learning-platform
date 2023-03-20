@@ -2,7 +2,7 @@ import pathlib
 import json
 from fastapi import FastAPI
 from fastapi import Request
-from fastapi import Form
+from fastapi import Form, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
@@ -10,8 +10,10 @@ from pydantic.error_wrappers import ValidationError
 from . import config, database, utility
 from .shortcuts import render, redirect
 from .users.models import User
+from .users.decorators import login_required
 from .users.pydantic_schemas import UserSignupSchema
 from .users.pydantic_schemas import UserLoginSchema
+
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 TEMPLATE_DIR = BASE_DIR / "templates"
@@ -35,6 +37,12 @@ def homepage(request: Request):
         "title" : "Video based learning platform"
     }
     return render(request, "home.html", context)
+
+@app.get("/account", response_class=HTMLResponse)
+@login_required
+def account_view(request: Request):
+    context = {}
+    return render(request, "account.html", context)
 
 @app.get("/login", response_class=HTMLResponse)
 def login_get_view(request: Request):
