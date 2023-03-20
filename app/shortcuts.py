@@ -22,8 +22,11 @@ def render (request, template_name, context={}, status_code:int=200, cookies:dic
     return response
     #return templates.TemplateResponse(template_name, contxt, status_code=status_code)
 
-def redirect(path, cookies:dict={}):
+def redirect(path, cookies:dict={}, remove_session=False):
     response = RedirectResponse(path, status_code=302)
     for k, v in cookies.items():
         response.set_cookie(key=k, value=v, httponly=True)
+    if remove_session:
+        response.set_cookie(key="session_ended", value="1", httponly=True)
+        response.delete_cookie("session_id")
     return response

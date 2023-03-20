@@ -15,6 +15,7 @@ from .users.pydantic_schemas import UserSignupSchema
 from .users.pydantic_schemas import UserLoginSchema
 
 
+
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 TEMPLATE_DIR = BASE_DIR / "templates"
 
@@ -23,6 +24,8 @@ templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
 
 DB_SESSION = None
 settings = config.get_settings()
+
+from .handlers import * #noqa
 
 @app.on_event("startup")
 def on_startup():
