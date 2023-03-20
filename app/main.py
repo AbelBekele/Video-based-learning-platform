@@ -16,7 +16,7 @@ from .users.decorators import login_required
 from .users.pydantic_schemas import UserSignupSchema
 from .users.pydantic_schemas import UserLoginSchema
 from .users.backends import JWTCookieBackend
-
+from .videos.models import Video
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 TEMPLATE_DIR = BASE_DIR / "templates"
@@ -36,6 +36,7 @@ def on_startup():
     print("Startup Sync")
     DB_SESSION = database.get_session()
     sync_table(User)
+    sync_table(Video)
 
 @app.get("/", response_class=HTMLResponse)
 def homepage(request: Request):
