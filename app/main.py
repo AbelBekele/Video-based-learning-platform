@@ -50,11 +50,15 @@ def login_post_view(request: Request,
         "password": password,
     }
     data, errors = utility.data_or_error_validation_schema(raw_data, UserLoginSchema)
+    context = {
+                "data": data,
+                "errors": errors,
+            }
+    if len(errors) > 0:
+        return render(request, "auth/login.html", context, status_code=400)
+
     print(data['password'].get_secret_value())
-    return render(request, "authentication/login.html", {
-        "data": data,
-        "errors": errors,
-    })
+    return render(request, "authentication/login.html", context)
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_get_view(request: Request):
