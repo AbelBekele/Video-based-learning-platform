@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from cassandra.cqlengine.management import sync_table
 from pydantic.error_wrappers import ValidationError
 from . import config, database, utility
-from .shortcuts import render
+from .shortcuts import render, redirect
 from .users.models import User
 from .users.pydantic_schemas import UserSignupSchema
 from .users.pydantic_schemas import UserLoginSchema
@@ -41,7 +41,7 @@ def login_get_view(request: Request):
     session_id = request.cookies.get("session_id") or None
     return render(request, "authentication/login.html", 
     {"logged_in": session_id is not None})
-
+  
 @app.post("/login", response_class=HTMLResponse)
 def login_post_view(request: Request, 
     email: str=Form(...), 
@@ -58,8 +58,8 @@ def login_post_view(request: Request,
     if len(errors) > 0:
         return render(request, "authentication/login.html", context, status_code=400)
 
-    print(data)
-    return render(request, "authentication/login.html", {"logged_in": True}, cookies=data)
+    #print(data)
+    return redirect("/", cookies=data)
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_get_view(request: Request):
@@ -78,10 +78,7 @@ def signup_post_view(request: Request,
         "password_confirm": password_confirm
     }
     data, errors = utility.data_or_error_validation_schema(raw_data, UserSignupSchema)
-    return render(request, "authentication/signup.html", {
-        "data": data,
-        "errors": errors,
-    })
+    return redirect("/login", cookies=data)
 
 @app.get("/users")
 def users_list():
