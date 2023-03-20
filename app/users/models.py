@@ -49,3 +49,17 @@ class User(Model):
         obj.set_password(password)
         obj.save()
         return obj
+    
+    @staticmethod
+    def check_existance(user_id):
+        queryset = User.objects.filter(user_id=user_id).allow_filtering()
+        return queryset.count() != 0
+    
+    @staticmethod
+    def by_user_id(user_id=None):
+        if user_id is None:
+            return None
+        queryset = User.objects.filter(user_id=user_id).allow_filtering()
+        if queryset.count() != 1:
+            return None
+        return
