@@ -6,6 +6,12 @@
 
 {% include 'snippets/form_errors.html' %}
 
+{% if logged_in %}
+
+    <p> You are logged in </p>
+
+{% else %}
+ 
 <form method = 'POST'>
     <div>
         <label for = 'email'>Email</label>
@@ -22,4 +28,5 @@
     </div>
 
 </form>
+{% endif %}
 {% endblock %}
