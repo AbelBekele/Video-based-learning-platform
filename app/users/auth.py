@@ -6,7 +6,7 @@ from app import config
 settings = config.get_settings()
 
 # Step 1 autenticating user first
-def authenticate(email, password)
+def authenticate(email, password):
     try:
         user_obj = User.objects.get(email=email)
     except Exception as e:
@@ -15,10 +15,10 @@ def authenticate(email, password)
         return None
     return user_obj
 
-# Step 2 logging in afte autenticating
+# Step 2 logging in after autenticating
 def login(user_obj, expires = 5):
     raw_data = {
-    "user_id": f"{user_obj.id}",
+    "user_id": f"{user_obj.user_id}",
     "role" : "admin",
     "exp": datetime.datetime.utcnow() + datetime.timedelta(seconds=expires)
 }
