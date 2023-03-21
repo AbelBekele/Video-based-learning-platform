@@ -104,3 +104,9 @@ def signup_post_view(request: Request,
 def users_list():
     queryset =  User.objects.all().limit(5)
     return list(queryset)
+
+@app.post("/watch-event")
+def watch_event_view(request:Request, data:dict):
+    print(data)
+    print(request.user.is_authenticated)
+    return{"working": True}

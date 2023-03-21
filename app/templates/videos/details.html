@@ -21,9 +21,9 @@
         var currentTime;
         var isPlaying;
         var monitorTimeOut;
-        var monitorTimeInterval = 1000;
+        var monitorTimeInterval = 5000;
         var timeSinceLastSaved = 0;
-        var timeIntervalForSave = 5000;
+        var timeIntervalForSave = 10000;
         function onYouTubeIframeAPIReady() {
             // console.log("hello world");
             player = new YT.Player('yt-video', {
@@ -93,7 +93,25 @@
         }
         timeSinceLastSaved = 0;
         console.log('saving...', data)
+        var reqOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }
+        fetch("/watch-event", reqOptions)
+        .then(response=>response.json())
+        .then(data=>{
+            console.log("success:", data)
+        }
+        )
+        .catch(err => {
+            console.log("error: ", err)
+        })
     }
+
+
 
 
 </script>
