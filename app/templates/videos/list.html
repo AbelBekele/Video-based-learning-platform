@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %} Videos | {{super () }} {% endblock %}
+
+{% block content %}
+
+{% for object in object_list %}
+    {% if not object.title %}
+   
+    <li>{{ object.host_id }}</li>
+   
+    {% else %}
+
+    <li>{{ object.title }}</li>
+
+    {% endif %}
+    
+{% endfor%}
+<h1> Videos </h1>
+{% endblock %}

@@ -8,6 +8,8 @@ from app import utility
 from app.shortcuts import render, redirect
 from app.users.decorators import login_required
 from .pydantic_schemas import VideoCreateSchema
+from .models import Video
+
 router = APIRouter(
     prefix = "/videos"
 )
@@ -19,8 +21,9 @@ def video_create_view(request: Request):
 
 @router.post("/create", response_class=HTMLResponse)
 @login_required
-def video_create_post_view(request: Request, url: str = Form(...)):
+def video_create_post_view(request: Request, title: str = Form(...), url: str = Form(...)):
     raw_data= {
+        "title": title,
         "url": url,
         "user_id": request.user.username
     }
@@ -38,7 +41,11 @@ def video_create_post_view(request: Request, url: str = Form(...)):
 
 @router.get("/", response_class=HTMLResponse)
 def video_list_view(request: Request):
-    return render(request, "videos/list.html", {})
+    queryset = Video.objects.all(). limit(100)
+    context = {
+        "object_list": queryset
+    }
+    return render(request, "videos/list.html", context)
 
 @router.get("/details", response_class=HTMLResponse)
 def video__view(request: Request):

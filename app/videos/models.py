@@ -22,12 +22,13 @@ class Video(Model):
     url = columns.Text()
     host_service = columns.Text(default="youtube")
     user_id = columns.UUID()
+    title = columns.Text()
 
     def __str__(self):
         return self.__repr__()
 
     def __repr__(self):
-        return f"Video(host_id={self.host_id}, host_service={self.host_service})"
+        return f"Video(title={self.title}, host_id={self.host_id}, host_service={self.host_service})"
     
     def as_data(self):
         return {f"{self.host_service}_id": self.host_id, "path": self.path}
