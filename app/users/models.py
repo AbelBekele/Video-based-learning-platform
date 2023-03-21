@@ -3,7 +3,7 @@ from app.config import get_settings
 from cassandra.cqlengine import columns
 from cassandra.cqlengine.models import Model
 
-from . import validator
+from . import validator, exceptions
 from . import securities
 
 settings = get_settings()
@@ -39,11 +39,11 @@ class User(Model):
     def create_user(email, password=None):
         queryset = User.objects.filter(email=email)
         if queryset.count() != 0:
-            raise Exception("User is already registered")
+            raise exceptions.UserHasAccountException("User is already registered")
             
         valid, msg, email = validator.validate_email_(email)
         if not valid:
-            raise Exception(f"Invalid email address: {msg}")
+            raise exceptions.InvalidEmailException(f"Invalid email address: {msg}")
         
         obj = User(email=email)
         obj.set_password(password)

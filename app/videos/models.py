@@ -1,12 +1,16 @@
 import uuid
 from app.config import get_settings
+from app.users.models import User 
+form app.users.exceptions import InvalidUserIDException
 from cassandra.cqlengine import columns
 from cassandra.cqlengine.models import Model
 
-from . import validator
-from . import securities
-
 settings = get_settings()
+
+from .extractor import extract_video_id,
+from .extractor import (
+    InvalidYouTubeVideoURLException,
+    VideoAlreadyAddedException)
 
 # Uses a keyspace to communicate with database
 # Accepts email address and password from user
@@ -23,8 +27,17 @@ class Video(Model):
         return self.__repr__()
 
     def __repr__(self):
-        return f"Video(email={self.email}, user_id={self.user_id})"
+        return f"Video(host_id={self.host_id}, host_service={self.host_service})"
 
     @staticmethod
     def add_video(url, user_id=None):
-        pass
+        host_id = extract_video_id(url)
+        if host_id is None:
+            raise InvalidYouTubeVideoURLException("Invalid YouTube video URL")
+        user_exists = User.check_existance(user_id)
+        if user_exists is None:
+            raise InvalidUserIDException("Invalid User")
+        queryset = Video.objects.allow_filtering().filter(host_id=host_id, user_id=user_id)
+        if queryset.count() != 0:
+            raise VideoAlreadyAddedException("Video is already added")
+        return Video.create(host_id=host_id, user_id=user_id, url=url)
