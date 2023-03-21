@@ -17,12 +17,18 @@ from .users.pydantic_schemas import UserSignupSchema
 from .users.pydantic_schemas import UserLoginSchema
 from .users.backends import JWTCookieBackend
 from .videos.models import Video
+from .videos.routers import router as video_router
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
+
+# could be removed if decided to use render totally
 TEMPLATE_DIR = BASE_DIR / "templates"
 
 app = FastAPI()
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
+app.include_router(video_router)
+
+# could be removed if decided to use render totally
 templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
 
 DB_SESSION = None
