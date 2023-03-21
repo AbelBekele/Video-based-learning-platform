@@ -5,7 +5,7 @@ from fastapi import(
 )
 from fastapi.responses import HTMLResponse
 from app import utility
-from app.shortcuts import render, redirect
+from app.shortcuts import render, redirect, find_object
 from app.users.decorators import login_required
 from .pydantic_schemas import VideoCreateSchema
 from .models import Video
@@ -47,6 +47,11 @@ def video_list_view(request: Request):
     }
     return render(request, "videos/list.html", context)
 
-@router.get("/details", response_class=HTMLResponse)
-def video__view(request: Request):
-    return render(request, "videos/details.html", {})
+@router.get("/{host_id}", response_class=HTMLResponse)
+def video__view(request: Request, host_id: str):
+    obj = find_object(Video, host_id=host_id)
+    context = {
+        "host_id": host_id,
+        "object": obj
+    }
+    return render(request, "videos/details.html", context)

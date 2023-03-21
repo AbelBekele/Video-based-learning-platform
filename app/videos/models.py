@@ -38,14 +38,14 @@ class Video(Model):
         return f"/videos/{self.host_id}"
 
     @staticmethod
-    def add_video(url, user_id=None):
+    def add_video(url, user_id=None, **kwargs):
         host_id = extract_video_id(url)
         if host_id is None:
             raise InvalidYouTubeVideoURLException("Invalid YouTube video URL")
         user_exists = User.check_existance(user_id)
         if user_exists is None:
             raise InvalidUserIDException("Invalid User")
-        queryset = Video.objects.allow_filtering().filter(host_id=host_id, user_id=user_id)
+        queryset = Video.objects.allow_filtering().filter(host_id=host_id)#, user_id=user_id)
         if queryset.count() != 0:
             raise VideoAlreadyAddedException("Video is already added")
-        return Video.create(host_id=host_id, user_id=user_id, url=url)
+        return Video.create(host_id=host_id, user_id=user_id, url=url, **kwargs)
