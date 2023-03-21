@@ -2,6 +2,7 @@ import uuid
 from app.config import get_settings
 from app.users.models import User 
 from app.users.exceptions import InvalidUserIDException
+from app.shortcuts import templates
 from cassandra.cqlengine import columns
 from cassandra.cqlengine.models import Model
 
@@ -30,6 +31,13 @@ class Video(Model):
     def __repr__(self):
         return f"Video(title={self.title}, host_id={self.host_id}, host_service={self.host_service})"
     
+    def render(self):
+        basename = self.host_service # youtube, vimeo
+        template_name = f"videos/renderers/{basename}.html"
+        context = {"host_id": self.host_id}
+        t = templates.get_template(template_name)
+        return t.render(context)
+
     def as_data(self):
         return {f"{self.host_service}_id": self.host_id, "path": self.path}
 
