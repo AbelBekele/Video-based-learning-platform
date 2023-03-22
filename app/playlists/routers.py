@@ -8,7 +8,7 @@ from app.shortcuts import render, redirect, find_object, is_htmx
 
 from app.watchevents.models import WatchEvent
 from .models import Playlist
-from .pydantic_schemas import PlaylistCreateSchema
+from .pydantic_schemas import PlaylistCreateSchema, PlaylistVideoAddSchema
 
 
 router = APIRouter(
@@ -87,9 +87,10 @@ def playlist_video_add_post_view(
     raw_data = {
         "title": title,
         "url": url,
-        "user_id": request.user.username
+        "user_id": request.user.username,
+        "playlist_id": db_id
     }
-    data, errors = utility.data_or_error_validation_schema(raw_data, VideoCreateSchema)
+    data, errors = utility.data_or_error_validation_schema(raw_data, PlaylistVideoAddSchema)
     redirect_path = data.get('path') or f"/playlists/{db_id}" 
     
     context = {
