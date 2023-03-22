@@ -20,6 +20,7 @@ from .videos.models import Video
 from .videos.routers import router as video_router
 from .watchevents.models import WatchEvent
 from .watchevents.pydantic_schemas import WatchEventSchema
+from .watchevents.routers import router as watch_event_router
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 
@@ -29,6 +30,7 @@ TEMPLATE_DIR = BASE_DIR / "templates"
 app = FastAPI()
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
 app.include_router(video_router)
+app.include_router(watch_event_router)
 
 # could be removed if decided to use render totally
 templates = Jinja2Templates(directory=str(TEMPLATE_DIR))
@@ -111,17 +113,4 @@ def signup_post_view(request: Request,
 def users_list():
     queryset =  User.objects.all().limit(5)
     return list(queryset)
-
-@app.post("/watch-event", response_model=WatchEventSchema)
-def watch_event_view(request:Request, watch_event:WatchEventSchema):
-    cleaned_data = watch_event.dict()
-    data = cleaned_data.copy()
-    data.update({
-        "user_id": request.user.username
-    })
-    print("data", data)
-    if (request.user.is_authenticated):
-        obj = WatchEvent.objects.create(**data)
-        return cleaned_data
-    return cleaned_data
 
