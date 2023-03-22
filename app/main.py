@@ -19,6 +19,7 @@ from .users.backends import JWTCookieBackend
 from .videos.models import Video
 from .videos.routers import router as video_router
 from .watchevents.models import WatchEvent
+from .watchevents.pydantic_schemas import WatchEventSchema
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 
@@ -111,17 +112,16 @@ def users_list():
     queryset =  User.objects.all().limit(5)
     return list(queryset)
 
-@app.post("/watch-event")
-def watch_event_view(request:Request, data:dict):
+@app.post("/watch-event", response_model=WatchEventSchema)
+def watch_event_view(request:Request, watch_event:WatchEventSchema):
+    cleaned_data = watch_event.dict()
+    data = cleaned_data.copy()
+    data.update({
+        "user_id": request.user.username
+    })
     print("data", data)
     if (request.user.is_authenticated):
-        WatchEvent.objects.create(
-            host_id = data.get("videoId"),
-            user_id = request.user.username,
-            start_time= data.get("startTime"),
-            duration = data.get("duration"),
-            end_time = data.get("currentTime"),
-            complete= data.get("complete")            
-        )
-    return{"working": True}
+        obj = WatchEvent.objects.create(**data)
+        return cleaned_data
+    return cleaned_data
 
