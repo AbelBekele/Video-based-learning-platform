@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse
 from app import utility
 from app.shortcuts import render, redirect, find_object
 from app.users.decorators import login_required
+from app.watchevents.models import WatchEvent
 from .pydantic_schemas import VideoCreateSchema
 from .models import Video
 
@@ -50,8 +51,13 @@ def video_list_view(request: Request):
 @router.get("/{host_id}", response_class=HTMLResponse)
 def video__view(request: Request, host_id: str):
     obj = find_object(Video, host_id=host_id)
+    start_time = 0
+    if request.user.is_authenticated:
+        user_id= request.user.username
+        start_time = WatchEvent.get_resume_time(host_id, user_id)
     context = {
         "host_id": host_id,
+        "start_time": start_time, 
         "object": obj
     }
     return render(request, "videos/details.html", context)
