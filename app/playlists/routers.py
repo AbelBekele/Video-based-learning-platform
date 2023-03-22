@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Request, Form
+import uuid
+from starlette.exceptions import HTTPException
+from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import HTMLResponse
-
 from app import utility
 from app.users.decorators import login_required
-from app.shortcuts import render, redirect, find_object
+from app.shortcuts import render, redirect, find_object, is_htmx
 
 from app.watchevents.models import WatchEvent
 from .models import Playlist
@@ -60,3 +61,51 @@ def playlist_detail_view(request: Request, db_id: str):
         "videos": obj.get_videos(),
     }
     return render(request, "playlists/details.html", context) 
+
+@router.get("/{db_id}/add-video", response_class=HTMLResponse)
+@login_required
+def playlist_video_add_view(
+    request: Request, 
+    db_id: uuid.UUID,
+    is_htmx=Depends(is_htmx),
+    ):
+    context = {"db_id": db_id}
+    if not is_htmx:
+        raise HTTPException(status_code=400)
+    return render(request, "playlists/htmx/add-video.html", context)
+    
+
+
+@router.post("/{db_id}/add-video", response_class=HTMLResponse)
+@login_required
+def playlist_video_add_post_view(
+    request: Request,
+    db_id: uuid.UUID,
+    is_htmx=Depends(is_htmx), 
+    title: str=Form(...), 
+    url: str = Form(...)):
+    raw_data = {
+        "title": title,
+        "url": url,
+        "user_id": request.user.username
+    }
+    data, errors = utility.data_or_error_validation_schema(raw_data, VideoCreateSchema)
+    redirect_path = data.get('path') or f"/playlists/{db_id}" 
+    
+    context = {
+        "data": data,
+        "errors": errors,
+        "title": title,
+        "url": url,
+        "db_id": db_id,
+    }
+
+    if not is_htmx:
+        raise HTTPException(status_code=400)
+
+    #Handle all HTMX requests
+
+    if len(errors) > 0:
+        return render(request, "playlists/htmx/add-video.html", context)
+    context = {"path": redirect_path, "title": data.get('title')}
+    return render(request, "videos/htmx/link.html", context)

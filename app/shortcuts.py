@@ -1,5 +1,6 @@
 from app import config
 from cassandra.cqlengine.query import DoesNotExist, MultipleObjectsReturned
+from fastapi import Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -7,6 +8,10 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 settings = config.get_settings()
 templates = Jinja2Templates(directory=str(settings.templates_dir))
+
+
+def is_htmx(request:Request):
+    return request.headers.get("hx-request") == 'true'
 
 # will generate template response from given template & context
 def render (request, template_name, context={}, status_code:int=200, cookies:dict={}):

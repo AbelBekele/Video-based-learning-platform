@@ -1,3 +1,5 @@
+import uuid
+from typing import Optional
 from fastapi import(
     APIRouter,
     Request,
@@ -21,7 +23,12 @@ def is_htmx(request:Request):
 
 @router.get("/create", response_class=HTMLResponse)
 @login_required
-def video_create_view(request: Request, is_htmx=Depends(is_htmx)):
+def video_create_view(
+    request: Request, 
+    is_htmx=Depends(is_htmx),
+    playlist_id:Optional[uuid.UUID]=None
+    ):
+    print(playlist_id)
     if is_htmx:
         return render(request, "videos/htmx/create.html", {})
     return render(request, "videos/create.html", {})
