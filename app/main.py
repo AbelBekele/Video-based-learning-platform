@@ -37,6 +37,10 @@ settings = config.get_settings()
 
 from .handlers import * #noqa
 
+@app.get("/healthcheck")
+def read_root():
+     return {"status": "ok"}
+
 @app.on_event("startup")
 def on_startup():
     # event is triggred when fastapi starts
@@ -120,3 +124,4 @@ def watch_event_view(request:Request, data:dict):
             complete= data.get("complete")            
         )
     return{"working": True}
+
