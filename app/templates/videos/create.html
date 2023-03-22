@@ -6,29 +6,6 @@
 
 {% include 'snippets/form_errors.html' %}
 
-{% if logged_in %}
+{% include 'videos/htmx/create.html' %}
 
-    <p> You are logged in </p>
-
-{% else %}
- 
-<form method = 'POST'>
-    <div>
-        <label for ="title">Video title</title></label>
-        <input type='text' name='title' id="title" placeholder='Please insert video title'
-        value=""{% if title %}{{ title }}{% endif %}/>
-    </div>
-    
-    <div>
-        <label for ="url">YouTube Link</label>
-        <input type='text' name='url' id="url" placeholder='Please insert the YouTube video URL'
-        value=""{% if url %}{{ url}}{% endif %}/>
-    </div>
-
-    <div>
-        <button type="submit">Add Video</button>
-    </div>
-
-</form>
-{% endif %}
 {% endblock %}
