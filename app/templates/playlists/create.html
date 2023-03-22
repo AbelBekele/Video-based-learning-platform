@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Login</h1>
+
+{% include 'snippets/form_errors.html' %}
+
+{% if logged_in %}
+
+    <p> You are logged in </p>
+
+{% else %}
+ 
+<form method = 'POST'>
+    <div>
+        <label for ="title">Playlist title</title></label>
+        <input type='text' name='title' id="title" placeholder='Please insert video title'
+        value=""{% if title %}{{ title }}{% endif %}/>
+    </div>
+    
+    <div>
+        <button type="submit">Add Playlist</button>
+    </div>
+
+</form>
+{% endif %}
+{% endblock %}

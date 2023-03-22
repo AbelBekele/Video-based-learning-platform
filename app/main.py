@@ -21,6 +21,7 @@ from .videos.routers import router as video_router
 from .watchevents.models import WatchEvent
 from .watchevents.pydantic_schemas import WatchEventSchema
 from .watchevents.routers import router as watch_event_router
+from .playlists.routers import router as playlist_router
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 
@@ -31,6 +32,7 @@ app = FastAPI()
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
 app.include_router(video_router)
 app.include_router(watch_event_router)
+app.include_router(playlist_router)
 
 # could be removed if decided to use render totally
 templates = Jinja2Templates(directory=str(TEMPLATE_DIR))

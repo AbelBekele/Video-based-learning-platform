@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %} Videos | {{super () }} {% endblock %}
+
+{% block content %}
+{{ host_id }}
+{% if object.title %} <h1>{{ object.title }}</h1> {% endif %}
+
+
+{% endblock %}

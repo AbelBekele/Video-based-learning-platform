@@ -27,7 +27,7 @@ def playlist_create_post_view(request: Request, title: str=Form(...)):
         "title": title,
         "user_id": request.user.username
     }
-    data, errors = utils.valid_schema_data_or_error(raw_data, PlaylistCreateSchema)
+    data, errors = utility.data_or_error_validation_schema(raw_data, PlaylistCreateSchema)
     context = {
         "data": data,
         "errors": errors,
@@ -59,4 +59,4 @@ def playlist_detail_view(request: Request, db_id: str):
         "object": obj,
         "videos": obj.get_videos(),
     }
-    return render(request, "playlists/detail.html", context) 
+    return render(request, "playlists/details.html", context) 
