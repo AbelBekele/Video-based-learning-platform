@@ -109,6 +109,14 @@ def signup_post_view(request: Request,
         "password_confirm": password_confirm
     }
     data, errors = utility.data_or_error_validation_schema(raw_data, UserSignupSchema)
+    context = {
+                "data": data,
+                "errors": errors,
+            }
+    if len(errors) > 0:
+        return render(request, "authentication/signup.html", context, status_code=400)
+    else:
+        User.create_user(email, password_confirm)  
     return redirect("/login", cookies=data)
 
 @app.get("/users")
