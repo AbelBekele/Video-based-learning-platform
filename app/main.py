@@ -124,3 +124,12 @@ def users_list():
     queryset =  User.objects.all().limit(5)
     return list(queryset)
 
+@app.get("/logout", response_class=HTMLResponse)
+def logout_get_view(request: Request):
+    if not request.user.is_authenticated:
+        return redirect('/login')
+    return render(request, "authentication/logout.html", {})
+
+@app.post("/logout", response_class=HTMLResponse)
+def logout_post_view(request: Request):
+    return redirect("/login", remove_session=True)
