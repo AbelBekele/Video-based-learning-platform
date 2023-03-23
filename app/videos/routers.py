@@ -88,3 +88,101 @@ def video__view(request: Request, host_id: str):
         "object": obj
     }
     return render(request, "videos/details.html", context)
+
+@router.get("/{host_id}/edit", response_class=HTMLResponse)
+@login_required
+def video_edit_view(request: Request, host_id: str):
+    obj = find_object(Video, host_id=host_id)
+    context = {
+        "object": obj
+    }
+    return render(request, "videos/edit.html", context) 
+
+
+
+@router.post("/{host_id}/edit", response_class=HTMLResponse)
+@login_required
+def video_edit_post_view(
+        rVideoEditSchemaequest: Request,
+          host_id: str, 
+        is_htmx=Depends(is_htmx), 
+        
+        title: str=Form(...), 
+        url: str = Form(...)):
+    raw_data = {
+        "title": title,
+        "url": url,
+        "user_id": request.user.username
+    }
+    obj = find_object(Video, host_id=host_id)
+    data, errors = utility.data_or_error_validation_schema(raw_data, VideoEditSchema)
+    if len(errors) > 0:
+        return render(request, "videos/edit.html", context, status_code=400)
+    obj.title = data.get('title') or obj.title
+    obj.update_video_url(url, save=True)
+    context = {
+        "object": obj
+    }
+    return render(request, "videos/edit.html", context)
+
+
+
+@router.get("/{host_id}/hx-edit", response_class=HTMLResponse)
+@login_required
+def video_hx_edit_view(
+    request: Request, 
+    host_id: str, 
+    is_htmx=Depends(is_htmx)):
+    if not is_htmx:
+        raise HTTPException(status_code=400)
+    obj = None
+    not_found = False
+    try:
+        obj = find_object(Video, host_id=host_id)
+    except:
+        not_found = True
+    if not_found:
+        return HTMLResponse("Not found, please try again.")
+    context = {
+        "object": obj
+    }
+    return render(request, "videos/htmx/edit.html", context) 
+
+
+
+@router.post("/{host_id}/hx-edit", response_class=HTMLResponse)
+@login_required
+def video_hx_edit_post_view(
+        request: Request,
+        host_id: str, 
+        is_htmx=Depends(is_htmx), 
+        title: str=Form(...), 
+        url: str = Form(...),
+        delete: Optional[bool] = Form(default=False)):
+    if not is_htmx:
+        raise HTTPException(status_code=400)
+    obj = None
+    not_found = False
+    try:
+        obj = find_object(Video, host_id=host_id)
+    except:
+        not_found = True
+    if not_found:
+        return HTMLResponse("Not found, please try again.")
+    if delete:
+        obj.delete()
+        return HTMLResponse('Item Deleted')
+    raw_data = {
+        "title": title,
+        "url": url,
+        "user_id": request.user.username
+    }
+    data, errors = utility.data_or_error_validation_schema(raw_data, VideoEditSchema)
+    if len(errors) > 0:
+        return render(request, "videos/htmx/edit.html", context, status_code=400)
+    obj.title = data.get('title') or obj.title
+    obj.update_video_url(url, save=True)
+    context = {
+        "object": obj
+    }
+    return render(request, "videos/htmx/list-inline.html", context)
