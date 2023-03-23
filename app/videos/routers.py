@@ -186,3 +186,5 @@ def video_hx_edit_post_view(
         "object": obj
     }
     return render(request, "videos/htmx/list-inline.html", context)
+
+    
