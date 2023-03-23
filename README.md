@@ -25,7 +25,7 @@ Getting Started
 
 1.  Clone the repository: `git clone https://github.com/AbelBekele/Video-based-learning-platform.git
 2.  Install the dependencies: `pip install -r requirements.txt`
-3.  Run the server: `python main.py`
+3.  Run the server: `uvicorn app.main:app`
 4.  Open your browser and navigate to `http://localhost:8000`
 
 Contributing
