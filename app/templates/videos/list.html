@@ -4,15 +4,11 @@
 
 {% block content %}
 <h1> Videos </h1>
-{% for object in object_list %}
-       
-    <li>
-        <a href="{{ object.path }}">
-        {% if not object.title %}{{ object.host_id }}</li>{% else %}
-        {{ object.title }}{% endif %}
-        </a>
-    </li>
 
-{% endfor%}
+{% for object in object_list %}
+<div style='margin:2rem;'>
+    {% include 'videos/htmx/list-inline.html' %}
+</div>
+{% endfor %}
 
 {% endblock %}

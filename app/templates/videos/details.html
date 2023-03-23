@@ -8,8 +8,9 @@
 
 <div id='yt-video' data-video-id="{{ host_id }}" data-start-time='{{ start_time }}'></div>
 
-<div><code>{{ object.render() }}</code></div>
+<!-- <div><code>{{ object.render() }}</code></div> -->
 
+{% include 'videos/htmx/list-inline.html' %}
 
 <script>
     var youtubeVideoDiv = document.getElementById('yt-video')
