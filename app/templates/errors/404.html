@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %} {{ status_code }} | {{super () }} {% endblock %}
+{% block title %}Page Not Found | {{ super() }} {% endblock %}
+
 
 {% block content %}
-<h1> Error 404.</h1>
-<h1> Page Not Found </h1>
+<div class='text-center mt-5 py-5'>
+    <h1>404 Error. Page Not Found</h1>
+</div>
 {% endblock %}

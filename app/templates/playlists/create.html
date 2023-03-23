@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<h1>Add Playlist</h1>
+<h1>Create Playlist</h1>
 
 {% include 'snippets/form_errors.html' %}
 
@@ -10,12 +10,15 @@
 <form method='POST'>
     <div>
         <label for='title'>Title</label>
-        <input type='text' name='title' id='title' placeholder='Your Video Title' value="{% if title %}{{ title }}{% endif %}" />
+        <input class='form-control' type='text' name='title' id='title' placeholder='Your Video Title' value="{% if title %}{{ title }}{% endif %}" />
     </div>
 
 
-    <button type='submit' >Add Playlist</button>
+    <button class='btn btn-primary mt-2' type='submit' >Add Playlist</button>
     
 </form>
+
+</div>
+</div>
 
 {% endblock %}

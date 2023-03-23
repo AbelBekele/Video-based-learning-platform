@@ -4,11 +4,16 @@
 
 {% block content %}
 <h1> Videos </h1>
+<li class="list-group">
+    <a class='border rounded p-4 mb-4' href="/videos/create">+ Create Video</a>
+  </li>
+<div class="list-group">
 
-{% for object in object_list %}
-<div style='margin:2rem;'>
-    {% include 'videos/htmx/list-inline.html' %}
+    {% for object in object_list %}
+    <div class='border rounded p-3 mb-2'>
+        {% include 'videos/htmx/list-inline.html' %}
+    </div>
+    {% endfor %}
+
 </div>
-{% endfor %}
-
 {% endblock %}

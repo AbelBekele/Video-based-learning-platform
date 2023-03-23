@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{% block title%} Video based learning platform {% endblock %}</title>
-    </head>
-    <body>
-        {% include 'snippets/nav.html' %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title%} Video based learning platform {% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  </head>
+  <body>
+    {% include 'snippets/nav.html' %}
+    <div class='container-fluid mt-3'>
         {% block content %}
         <h1>Body</h1>
         {% endblock %}
+    </div>
 
         <script>
             var tag = document.createElement("script");
@@ -16,6 +21,6 @@
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         </script>
        <script src="https://unpkg.com/htmx.org@1.8.6" integrity="sha384-Bj8qm/6B+71E6FQSySofJOUjA/gq330vEqjFx9LakWybUySyI1IQHwPtbTU7bNwx" crossorigin="anonymous"></script>
-       
-    </body>
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  </body>
 </html>

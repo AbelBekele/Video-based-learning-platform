@@ -3,14 +3,27 @@
 {% block title %} Videos | {{super () }} {% endblock %}
 
 {% block content %}
-{{ host_id }}
-{% if object.title %} <h1>{{ object.title }}</h1> {% endif %}
+{% if object.title %}<h1>{{ object.title }}</h1>{% endif %}
 
-<div id='yt-video' data-video-id="{{ host_id }}" data-start-time='{{ start_time }}'></div>
+<div class='row'>
 
-<!-- <div><code>{{ object.render() }}</code></div> -->
+    <div class='col-md-9 col-12'>
 
-{% include 'videos/htmx/list-inline.html' %}
+
+
+<div class='ratio ratio-16x9' id='yt-video' data-video-id="{{ host_id }}" data-start-time='{{ start_time }}'></div>
+
+</div>
+
+
+<div class='col-md-3 col-12'>
+    
+
+    <!-- <code>{{ object.render() }}</code> -->
+</div>
+
+
+</div>
 
 <script>
     var youtubeVideoDiv = document.getElementById('yt-video')

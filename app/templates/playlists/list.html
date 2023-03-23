@@ -3,16 +3,20 @@
 {% block title %} Videos | {{super () }} {% endblock %}
 
 {% block content %}
-<h1> Videos </h1>
+<h1> Playlists </h1>
 {% for object in object_list %}
        
-    <li>
-        <a href="{{ object.path }}">
-        {% if not object.title %}{{ object.database_id }}</li>{% else %}
-        {{ object.title }}{% endif %}
-        </a>
-    </li>
-
+        <div class="list-group">      
+            
+                <a class="list-group-item list-group-item-action" href="{{ object.path }}">
+                {% if not object.title %}{{ object.db_id }}{% else %}{{ object.title }}{% endif %}
+                </a>
+        </div>
+        
 {% endfor%}
+</li>
+<div class="list-group">
+<a class="list-group-item list-group-item-action" href="/playlists/create">+ Create Playlist</a>
+</li>
 
 {% endblock %}
