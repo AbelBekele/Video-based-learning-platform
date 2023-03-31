@@ -1,10 +1,12 @@
 import pathlib
 import json
+from typing import Optional
 from fastapi import FastAPI
 from fastapi import Request
 from fastapi import Form, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.authentication import requires
 from cassandra.cqlengine.management import sync_table
@@ -27,8 +29,10 @@ BASE_DIR = pathlib.Path(__file__).resolve().parent # app/
 
 # could be removed if decided to use render totally
 TEMPLATE_DIR = BASE_DIR / "templates"
+STATIC_DIR = BASE_DIR/"templates/static"
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.add_middleware(AuthenticationMiddleware, backend=JWTCookieBackend())
 app.include_router(video_router)
 app.include_router(watch_event_router)
@@ -58,7 +62,8 @@ def on_startup():
 @app.get("/", response_class=HTMLResponse)
 def homepage(request: Request):
     if request.user.is_authenticated:
-        return render(request, "dashboard.html", {}, status_code=200)
+        context = {"image_path": "/static/assets/img.svg"}
+        return render(request, "dashboard.html", context, status_code=200)
     return render(request, "home.html", {})
 
 @app.get("/account", response_class=HTMLResponse)
@@ -69,14 +74,15 @@ def account_view(request: Request):
 
 @app.get("/login", response_class=HTMLResponse)
 def login_get_view(request: Request):
-    session_id = request.cookies.get("session_id") or None
     return render(request, "authentication/login.html", 
-    {"logged_in": session_id is not None})
+    {})
   
 @app.post("/login", response_class=HTMLResponse)
 def login_post_view(request: Request, 
     email: str=Form(...), 
-    password: str=Form(...)):
+    password: str=Form(...),
+    next: Optional[str] = "/"
+    ):
     raw_data = {
         "email": email,
         "password": password,
@@ -88,9 +94,10 @@ def login_post_view(request: Request,
             }
     if len(errors) > 0:
         return render(request, "authentication/login.html", context, status_code=400)
+    if "http://127.0.0.1" not in next:
+        next = '/'
+    return redirect(next, cookies=data)
 
-    #print(data)
-    return redirect("/", cookies=data)
 
 @app.get("/signup", response_class=HTMLResponse)
 def signup_get_view(request: Request):
